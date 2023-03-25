@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-function Feedback() {
+function Feedback({text}) {
   return (
     <div className="Feedback">
-     
+      {text}
     </div>
   );
 }

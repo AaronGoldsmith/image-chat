@@ -1,17 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Chat from './components/Chat/Chat';
 import ImageDisplay from './components/ImageDisplay/ImageDisplay';
 import Feedback from './components/Feedback/Feedback';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [imageUrl, setImageUrl] = useState('');
+  const [prompt, setPrompt] = useState('');
+
+  const handlePromptReceived = (e) => {
+    setPrompt(e);
+  };
+
+  const handleImageReceived = (e) => {
+    setImageUrl(e);
+  };
   return (
     <div className="App">
-      <Chat />
-      <ImageDisplay />
-      <Feedback />
+      <Chat handlePromptReceived={handlePromptReceived}
+            handleImageReceived={handleImageReceived} />
+      <ImageDisplay imageUrl={imageUrl} />
+      <Feedback text={prompt}/>
     </div>
   );
-}
+};
 
 export default App;
