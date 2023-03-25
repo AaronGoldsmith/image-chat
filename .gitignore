@@ -1,0 +1,6 @@
+# local env and system files
+.env
+.DS_Store
+
+# dependencies
+*/node_modules/*
