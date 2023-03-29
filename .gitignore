@@ -1,6 +1,9 @@
 # local env and system files
 .env
 .DS_Store
+venv/
 
 # dependencies
 */node_modules/*
+
+*-firebase-adminsdk-*
