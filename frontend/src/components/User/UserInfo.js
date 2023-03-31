@@ -22,14 +22,17 @@ const UserInfo = ({ user, authFunctions }) => {
   
   return (
     <div className="user-info">
-      <img className="user-photo" src={imageUrl} alt={displayName} />
-      <div className="user-details">
-        <h2 className="display-name">{displayName}</h2>
-        {emailVerified && (
-          <span className="verified-badge" title="Verified">Verified ✔</span>
-        )}
-        <p className="created-date">Joined: {createdDate}</p>
+      <div className="user-info-content">
+        <img className="user-photo" src={imageUrl} alt={displayName} />
+        <div className="user-details">
+          <h2 className="display-name">{displayName}
+          {emailVerified && (
+            <span className="verified-badge" title="Verified"> ✔</span>
+          )}</h2>
+          {/* <p className="created-date">Joined: {createdDate}</p> */}
+        </div>
       </div>
+     
       <button className="sign-out-button" onClick={handleSignOut}>
         Sign out
       </button>
