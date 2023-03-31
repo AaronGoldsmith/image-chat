@@ -45,6 +45,8 @@ function Chat({handlePromptReceived, handleImageReceived}) {
     // Display the generated image
     console.log(imageResponseData.imageUrl);
     handleImageReceived(imageResponseData.imageUrl)
+
+    // saveResponse
   };
   
 

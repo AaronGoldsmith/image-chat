@@ -21,28 +21,47 @@ try {
     console.error('Firebase initialization error', err.stack);
   }
 
-
-function writeImgData(id, prompt, imageUrl, time, res) {
-  const db = admin.firestore();
-
-  if (!id) {
-    res.status(400).send('Missing ID parameter');
-    return;
+  function stringToNumber(s) {
+    return [...s].reduce((hashValue, char) => {
+      const charCode = char.charCodeAt(0);
+      return ((hashValue << 5) + hashValue) + charCode;
+    }, 5381);
   }
-  const docRef = db.collection('images').doc(id)
-  docRef.set({
-    prompt: prompt,
-    image : imageUrl,
-    datetime: time
-  })
-  .then(() => {
-    console.log('Document successfully written!');
-    res.status(200)
-  })
-  .catch((error) => {
-    console.error('Error writing document: ', error);
-  });
-}
+
+  async function writeImgData(user, prompt, imageUrl, res) {
+    const db = admin.firestore();
+  
+    if (!user) {
+      res.status(400).send('Missing ID parameter');
+      return;
+    }
+  
+    const gen_id = stringToNumber(imageUrl);
+    const userRef = db.collection('users').doc(user).collection('generations').doc(String(gen_id));
+    const docRef = db.collection('generations').doc(String(gen_id));
+  
+    const timestamp = new Date().toISOString();
+    const data = {
+      prompt: prompt,
+      image: imageUrl,
+      datetime: timestamp,
+      user: user
+    };
+  
+    try {
+      await userRef.set(data);
+      console.log('Document successfully written to user ref!');
+  
+      await docRef.set(data);
+      console.log('Document successfully written to generations!');
+  
+      res.status(200).send('Documents successfully written!');
+    } catch (error) {
+      console.error('Error writing documents: ', error);
+      res.status(500).send('Error writing documents');
+    }
+  }
+  
 
 
 let fetch
@@ -61,9 +80,7 @@ const initServer = async () => {
   app.use('/api/chat', chatRoutes);
   app.use('/api/image', imageRoutes);
   app.post('/api/save', (req, res) => {
-    console.log(req.body.name)
     console.log(req.body)
-    const now = new Date().getUTCMilliseconds()
     res.json(200)
     const {prompt, imageUrl, user_id} = req.body
   
@@ -71,7 +88,7 @@ const initServer = async () => {
       res.status(400).send('Missing ID parameter');
       return;
     }
-    writeImgData(user_id, prompt, imageUrl, now, res)
+    writeImgData(user_id, prompt, imageUrl, res)
   })
   app.get('/proxy-image', async (req, res) => {
     const imageUrl = req.query.url;

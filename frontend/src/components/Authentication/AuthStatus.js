@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import UserInfo from '../User/UserInfo';
 import GuestInfo from '../User/GuestInfo'
-import LoginWithGoogle from './LoginWithGoogle';
 import { initializeApp } from 'firebase/app';
 
 const AuthStatus = ({ getAuth, onUserChange }) => {
@@ -44,9 +43,7 @@ const AuthStatus = ({ getAuth, onUserChange }) => {
           setUser(user)
           onUserChange(user); // cb function with updated user state
         }} ></GuestInfo>
-      )}
-      {!user && <p>Guest</p>}
-     
+      )}     
     </div>
   );
 };
