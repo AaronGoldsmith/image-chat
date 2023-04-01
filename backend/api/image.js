@@ -22,7 +22,6 @@ router.post('/', async (req, res) => {
       size: '512x512', // Customize the desired image size
       response_format: 'url',
     });
-    console.log(response.data)
     if (response.data && response.data.data && response.data.data.length > 0) {
       const imageUrl = response.data.data[0].url;
       res.json({ imageUrl });

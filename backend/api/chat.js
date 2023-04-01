@@ -22,13 +22,15 @@ router.get('/', async function (req, res) {
 router.post('/', async (req, res) => {
   try {
     const userMessage = req.body.message;
-
+    if(userMessage === ''){return;}
     // Prepare the API call with messages
     const messages = [
-      { role: 'system', content: 'You are a helpful assistant creating alt tags from user prompts.' },
-      { role: 'user', content: 'a white siamese cat' },
+      { role: 'system', content: 'You are interpreterting partial user input to create vivid textual descriptions for the user\'s minds eye.' },
+      { role: 'user', content: 'a white siamese' },
       { role: 'system', content: 'a close up, studio photographic portrait of a white siamese cat that looks curious, backlit ears'},
-      { role: 'user', content: userMessage }
+      { role: 'user', content: 'a;slkdjf;alskdjfasdf blah blah trouble' },
+      { role: 'system', content: 'Vibrant blossoms, magically enchanting, blooming and twirling in intricate patterns, captured in an infinite series of reflections and repetitions, refracted through a prism of colors and shapes, creating an ethereal dance of light and motion.'},
+      { role: 'user', content: userMessage + '. You should only respond with your version, or interpretation – '}
     ];
 
     // Call the OpenAI Chat API
