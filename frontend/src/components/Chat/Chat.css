@@ -53,5 +53,12 @@
   cursor: pointer;
 }
 
+.Chat form input{
+  background: #33333336;
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
 
 

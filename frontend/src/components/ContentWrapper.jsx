@@ -6,7 +6,7 @@ import Feedback from './Feedback/Feedback';
 const ContentWrapper = ({ user }) => {
   const [imageUrl, setImageUrl] = useState('');
   const [prompt, setPrompt] = useState('');
-  const [saveData, setSaveData] = useState({ prompt: '', imageUrl: '', user_id: 0 });
+  const [saveData, setSaveData] = useState({ prompt: '', imageUrl: '', title: '', user_id: 0 });
   const [isImageUpdated, setIsImageUpdated] = useState(false);
   const [isPromptUpdated, setIsPromptUpdated] = useState(false);
 
@@ -18,14 +18,18 @@ const ContentWrapper = ({ user }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(saveData),
-      })
-        .then((res) => res.json())
-        .then((res2) => console.log(res2));
+      }).then((res) => res.json())
+        .then((res2) => console.log(res2))
+        .catch(err => console.error(err))
 
       setIsImageUpdated(false);
       setIsPromptUpdated(false);
     }
   }, [isImageUpdated, isPromptUpdated, saveData]);
+
+  const handleInputSubmitted = (e) => {
+    setSaveData((prevState) => ({ ...prevState, title: e }));
+  }
 
   const handlePromptReceived = (e) => {
     setPrompt(e);
@@ -40,13 +44,14 @@ const ContentWrapper = ({ user }) => {
   };
 
   useEffect(() => {
-    const id = user ? user.uid : 0;
+    const id = (user && user.isAnonymous) ? `guest_${user.uid}` : user ? user.uid : 0;
     setSaveData((prevState) => ({ ...prevState, user_id: id }));
   }, [user]);
 
   return (
     <>
       <Chat
+        handleInputSubmitted={handleInputSubmitted}
         handlePromptReceived={handlePromptReceived}
         handleImageReceived={handleImageReceived}
       />

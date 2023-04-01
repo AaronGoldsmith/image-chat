@@ -1,0 +1,11 @@
+.feed-item{
+  display:flex;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 600px){
+  .Feed{
+    max-width: 80%;
+    margin: 0px auto;
+  }
+}
