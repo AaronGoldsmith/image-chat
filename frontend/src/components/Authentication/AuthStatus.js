@@ -57,14 +57,16 @@ const AuthStatus = ({ onUserChange }) => {
 
   return (
     <div>
-      {user.emailVerified ? (
+      {user && user.emailVerified ? (
         <UserInfo user={user} authFunctions={{ signOut: handleSignOut, getAuth }} />
       ) : (
-        <GuestInfo updateLoggedInUser={user => {
-          setUser(user)
-          onUserChange(user); // cb function with updated user state
-        }} ></GuestInfo>
-      )}     
+        <GuestInfo
+          updateLoggedInUser={(user) => {
+            setUser(user);
+            onUserChange(user); // cb function with updated user state
+          }}
+        ></GuestInfo>
+      )}
     </div>
   );
 };

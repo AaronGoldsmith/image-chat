@@ -5,22 +5,24 @@ import AuthStatus from './components/Authentication/AuthStatus';
 import Feedback from './components/Feedback/Feedback';
 
 import './App.css';
-import { getAuth } from 'firebase/auth';
-
 const App = () => {
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState(null);
   const [prompt, setPrompt] = useState('');
   const [user, setUser] = useState(null);
 
  
   useEffect(() => {
-    fetch("/api/save", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ prompt: prompt, imageUrl:imageUrl, user_id: user.uid ?? 0}),
-    }).then(res => res.json()).then(res2 => console.log(res2)) 
+    const id = user ? user.uid : "guest"+String(Math.floor(Math.random()*500000))
+    if(prompt){
+      fetch("/api/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: prompt, imageUrl:imageUrl, user_id: id }),
+      }).then(res => res.json()).then(res2 => console.log(res2)) 
+    }
+    
   }, [prompt]);
 
   const handlePromptReceived = (e) => {
@@ -33,9 +35,8 @@ const App = () => {
   };
   return (
     <div className="App">
-      <AuthStatus getAuth={getAuth} onUserChange={(user => setUser(user))} />
+      <AuthStatus onUserChange={(user => setUser(user))} />
       <Chat 
-            user_id={user? user.uid : 0}
             handlePromptReceived={handlePromptReceived}
             handleImageReceived={handleImageReceived} />
       <ImageDisplay imageUrl={imageUrl} />
