@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
 import UserInfo from '../User/UserInfo';
 import GuestInfo from '../User/GuestInfo'
-import { initializeApp } from 'firebase/app';
 
-const AuthStatus = ({ getAuth, onUserChange }) => {
+const AuthStatus = ({ onUserChange }) => {
   const [user, setUser] = useState(null);
-
   useEffect(() => {
+    
     const config = {
       apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
       authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -17,12 +18,32 @@ const AuthStatus = ({ getAuth, onUserChange }) => {
     };
 
     initializeApp(config);
-    const unsubscribe = getAuth().onAuthStateChanged(user => {
-      setUser(user);
-      onUserChange(user); // Call the callback function with the updated user state
+    const auth = getAuth()
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        onUserChange(user); // Call the callback function with the updated user state
+      } else {
+        // If no user is signed in, sign in the user anonymously
+        signInAnonymously(auth)
+          .then((userCredential) => {
+            // The user is signed in anonymously
+            const anonUser = userCredential.user;
+            setUser(anonUser);
+            onUserChange(anonUser);
+          })
+          .catch((error) => {
+            console.error('Error signing in anonymously:', error);
+          });
+      }
     });
-    return unsubscribe;
-  }, [getAuth, onUserChange]);
+  
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
 
   const handleSignOut = async () => {
     try {
@@ -36,7 +57,7 @@ const AuthStatus = ({ getAuth, onUserChange }) => {
 
   return (
     <div>
-      {user ? (
+      {user.emailVerified ? (
         <UserInfo user={user} authFunctions={{ signOut: handleSignOut, getAuth }} />
       ) : (
         <GuestInfo updateLoggedInUser={user => {

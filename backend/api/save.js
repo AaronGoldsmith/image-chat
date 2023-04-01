@@ -44,8 +44,8 @@ router.post('/', async (req, res, next) => {
     // res.json(200)  // Comment out or remove this line
     const {prompt, imageUrl, user_id} = req.body
 
-    if (!user_id) {
-      res.status(400).send('Missing ID parameter');
+    if (!user_id || !imageUrl || !prompt) {
+      res.status(400).send('Missing parameter');
       return;
     }
     await writeImgData(user_id, prompt, imageUrl, res)

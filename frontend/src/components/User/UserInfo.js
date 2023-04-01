@@ -7,8 +7,14 @@ const UserInfo = ({ user, authFunctions }) => {
   const { createdAt } = metadata
   const createdDate = new Date(parseInt(createdAt)).toLocaleDateString();
   const backendUrl = 'http://localhost:3001'; // Replace with your backend server's URL
-  const imageUrl = `${backendUrl}/proxy-image?url=${encodeURIComponent(photoURL)}`;
+  const imageUrl = emailVerified ? `${backendUrl}/api/proxy-image?url=${encodeURIComponent(photoURL)}` : 'https://picsum.photos/200/200.jpg'
+  if(!user){return;}
+  else{
+    console.log(user)
+  }
+  if(emailVerified){
 
+  }
   const handleSignOut = () => {
     const auth = getAuth();
     signOut(auth)
