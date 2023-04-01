@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
       { role: 'user', content: 'a white siamese' },
       { role: 'system', content: 'a close up, studio photographic portrait of a white siamese cat that looks curious, backlit ears'},
       { role: 'user', content: 'a;slkdjf;alskdjfasdf blah blah trouble' },
-      { role: 'system', content: 'Vibrant blossoms, magically enchanting, blooming and twirling in intricate patterns, captured in an infinite series of reflections and repetitions, refracted through a prism of colors and shapes, creating an ethereal dance of light and motion.'},
+      { role: 'system', content: 'Vibrant blossoms, magically enchanting, blooming and twirling in intricate patterns, captured in an infinite series of reflections and repetitions, refracted troubles through a prism of colors and shapes, creating an ethereal dance of light and motion.'},
       { role: 'user', content: userMessage + '. You should only respond with your version, or interpretation – '}
     ];
 
