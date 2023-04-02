@@ -45,23 +45,27 @@ function Chat({handlePromptReceived, handleInputSubmitted, handleImageReceived})
   
     // Parse the image response
     const imageResponseData = await imageResponse.json();
-  
-    // Display the generated image
-    console.log(imageResponseData.imageUrl);
+    console.log(imageResponseData)
+    // fire a callback 
     handleImageReceived(imageResponseData.imageUrl)
+
+   
   };
   
 
   return (
     <div className="Chat">
       <form onSubmit={handleSubmit}>
+        <div className="chat-container">
         <input
           type="text"
           value={message}
           onChange={handleInputChange}
           placeholder="Type your message here"
         />
-        <button type="submit" onClick={handleSubmit}>Send</button>
+          <button className="button" type="submit" onClick={handleSubmit}>Send</button>
+        </div>
+        
       </form>
     </div>
   );

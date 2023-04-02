@@ -35,16 +35,9 @@
 input[type=text]{
   padding: 13px;
   outline: none;
-  width: 400px;
   border: none;
-  box-shadow: -2px 0px 1px 1px #00000026;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button{
+  padding: 8px;
 }
