@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Chat.css';
 
-function Chat({handlePromptReceived, handleImageReceived}) {
+function Chat({handlePromptReceived, handleInputSubmitted, handleImageReceived}) {
   const [message, setMessage] = useState('');
 
   const handleInputChange = (e) => {
@@ -10,10 +10,14 @@ function Chat({handlePromptReceived, handleImageReceived}) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    
     // Get the user's input
     const userInput = message
-    console.log(userInput)
+    if(userInput === ''){return;}
+    console.log('sending, ' + userInput)
+
+    handleInputSubmitted(userInput)
+
     // Call the server-side API to send the user's message and get the AI's response
     const response = await fetch("/api/chat", {
       method: "POST",
@@ -25,11 +29,11 @@ function Chat({handlePromptReceived, handleImageReceived}) {
   
     // Parse the response
     const responseData = await response.json();
-  
-    // Display the AI's response
-    console.log(responseData.reply.content)
     const cgptPrompt = responseData.reply.content
+
+    // send back the userInput and response
     handlePromptReceived(cgptPrompt)
+    
     // Call the server-side API to generate an image
     const imageResponse = await fetch("/api/image", {
       method: "POST",

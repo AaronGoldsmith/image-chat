@@ -30,6 +30,7 @@ const AuthStatus = ({ onUserChange }) => {
           .then((userCredential) => {
             // The user is signed in anonymously
             const anonUser = userCredential.user;
+            console.log(anonUser)
             setUser(anonUser);
             onUserChange(anonUser);
           })
