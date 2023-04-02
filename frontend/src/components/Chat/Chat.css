@@ -1,3 +1,6 @@
+.Chat {
+  margin: 30px;
+}
 .chat-container {
   display: flex;
   flex-direction: column;
@@ -57,7 +60,6 @@
   background: #33333336;
   display: inline-flex;
   overflow: hidden;
-  border-radius: 14px;
 }
 
 

@@ -1,9 +1,31 @@
 const express = require('express');
 const router = express.Router();
+// const axios = require('axios')
 const admin = require('firebase-admin');
 const uuid = require('uuid').v4
 
-async function writeImgData(user, title, prompt, imageUrl, res) {
+let fetch;
+const initFetch = async () => {
+  const fetchModule = await import('node-fetch');
+  fetch = fetchModule.default;
+};
+initFetch();
+
+async function saveImageToFirebase(url, filename) {
+  try {
+    const response = await fetch(url)
+    const data = await response.arrayBuffer();
+    const bucket = admin.storage().bucket();
+    const file = bucket.file(`images/${filename}`);
+    await file.save(Buffer.from(data));
+    console.log('Image saved successfully!');
+  } catch (error) {
+    console.error('Error saving image:', error);
+  }
+}
+
+
+async function writeImgData(user, title, prompt, id, res) {
   const db = admin.firestore();
 
   if (!user) {
@@ -11,7 +33,9 @@ async function writeImgData(user, title, prompt, imageUrl, res) {
     return;
   }
 
-  const id = uuid()
+  // save static asset
+  const filename = `${id}.jpg`
+
   const userRef = db.collection('users').doc(user).collection('generations').doc(id);
   const docRef = db.collection('generations').doc(id);
 
@@ -27,7 +51,7 @@ async function writeImgData(user, title, prompt, imageUrl, res) {
   const data = {
     ...base_data,
     prompt: prompt,
-    image: imageUrl,
+    image: `imagegen-36210.appspot.com/images/${filename}`,
     title: title
   }
 
@@ -55,11 +79,18 @@ router.post('/', async (req, res, next) => {
       res.status(400).send('Missing parameter');
       return;
     }
-    await writeImgData(user_id, title, prompt, imageUrl, res)
+    const id = uuid()
+    const filename = `${id}.jpg`
+    await saveImageToFirebase(imageUrl, filename )
+    await writeImgData(user_id, title, prompt, id, res)
+
+    // await writeImgData(user_id, title, prompt, imageData, res)
   } catch (error) {
     next(error);
   }
 
 });
+
+
 
 module.exports = router;
